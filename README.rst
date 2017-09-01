@@ -4,11 +4,12 @@ Munin plugins for Supervisord
 Features
 --------
 
-* CPU utilization as a percentage
+* CPU utilization as a percentage (average, and max)
 * File descriptors used
 * Memory usage
 * Socket connections opened
 * Threads currently used
+* Context switches (voluntary and involuntary)
 
 Basic Usage
 -----------
