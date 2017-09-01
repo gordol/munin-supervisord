@@ -5,11 +5,14 @@
 
 Multigraph Plugin - Graph Structure
 
-    - supervisord_processes_cpu_percent
+    - supervisord_processes_cpu_percent_avg
+    - supervisord_processes_cpu_percent_max
     - supervisord_processes_memory_usage
     - supervisord_processes_num_fds
     - supervisord_processes_num_threads
     - supervisord_processes_num_connections
+    - supervisord_processes_num_context_switches_voluntary
+    - supervisord_processes_num_context_switches_involuntary
 
 
 Environment Variables
@@ -53,8 +56,14 @@ class MuninSupervisordProcessStatsPlugin(MuninPlugin):
 
         graphs = [('supervisord_processes_memory_usage', 'Memory usage',
                    'Memory usage', 'Memory usage (MiB)', 'LINE2', 'GAUGE', None),
-                  ('supervisord_processes_cpu_percent', 'CPU utilization as a percentage',
-                   'CPU utilization as a percentage', 'CPU percentage', 'LINE2', 'GAUGE', None),
+                  ('supervisord_processes_cpu_percent_avg', 'Average CPU utilization as a percentage',
+                   'Average CPU utilization as a percentage', 'Avg CPU percentage', 'LINE2', 'GAUGE', None),
+                  ('supervisord_processes_cpu_percent_max', 'Max CPU utilization as a percentage',
+                   'Max CPU utilization as a percentage', 'Max CPU percentage', 'LINE2', 'GAUGE', None),
+                  ('supervisord_processes_num_context_switches_involuntary', 'Involuntary context switches',
+                   'Involuntary context switches', 'Voluntary context Switches', 'LINE2', 'GAUGE', None),
+                  ('supervisord_processes_num_context_switches_voluntary', 'Voluntary context switches',
+                   'Voluntary context switches', 'Voluntary context Switches', 'LINE2', 'GAUGE', None),
                   ('supervisord_processes_num_fds', 'File descriptors used',
                    'File descriptors used', None, 'LINE2', 'GAUGE', '--lower-limit 0'),
                   ('supervisord_processes_num_threads', 'Threads currently used',
@@ -90,11 +99,17 @@ class MuninSupervisordProcessStatsPlugin(MuninPlugin):
 
     def retrieveVals(self):
         """Retrieve values for graphs."""
-        attrs = ('num_fds', 'cpu_percent', 'num_threads', 'memory_percent')
+        attrs = ('num_fds', 'num_ctx_switches', 'num_threads', 'memory_percent')
         for entry in self.entries:
             try:
                 p = psutil.Process(entry['pid'])
                 data = p.as_dict(attrs=attrs)
+                cpu_usages = []
+                for i in range(20):
+                    cpu_usages.append(p.cpu_percent(interval=0.05))
+
+                data['cpu_percent_max'] = float(max(cpu_usages))
+                data['cpu_percent_avg'] = float(sum(cpu_usages))/len(cpu_usages)
 
                 # memory usage
                 if self.graphEnabled('supervisord_processes_memory_usage')\
@@ -103,9 +118,21 @@ class MuninSupervisordProcessStatsPlugin(MuninPlugin):
                         * data['memory_percent'] / 100
                     self._stats['supervisord_processes_memory_usage'][entry['name']] = memory_usage
 
-                # cpu percent
-                if self.graphEnabled('supervisord_processes_cpu_percent'):
-                    self._stats['supervisord_processes_cpu_percent'][entry['name']] = data['cpu_percent']
+                # cpu percent avg
+                if self.graphEnabled('supervisord_processes_cpu_percent_avg'):
+                    self._stats['supervisord_processes_cpu_percent_avg'][entry['name']] = data['cpu_percent_avg']
+
+                # voluntary context switches
+                if self.graphEnabled('supervisord_processes_num_context_switches_voluntary'):
+                    self._stats['supervisord_processes_num_context_switches_voluntary'][entry['name']] = data['num_ctx_switches'].voluntary
+
+                # involuntary context switches
+                if self.graphEnabled('supervisord_processes_num_context_switches_involuntary'):
+                    self._stats['supervisord_processes_num_context_switches_involuntary'][entry['name']] = data['num_ctx_switches'].involuntary
+
+                # cpu percent max
+                if self.graphEnabled('supervisord_processes_cpu_percent_max'):
+                    self._stats['supervisord_processes_cpu_percent_max'][entry['name']] = data['cpu_percent_max']
 
                 # num threads
                 if self.graphEnabled('supervisord_processes_num_threads'):
