@@ -79,10 +79,10 @@ class install(_install):
 setup(
     cmdclass={'install': install},
     name='munin-supervisord',
-    version='0.0.1',
-    author='ratazzi',
-    author_email='ratazzi.potts@gmail.com',
-    url='https://github.com/ratazzi/munin-supervisord',
+    version='0.0.2',
+    author='gordol',
+    author_email='linuxinit@gmail.com',
+    url='https://github.com/gordol/munin-supervisord',
     packages=find_packages(),
     description='Munin plugin for Supervisord',
     entry_points={
