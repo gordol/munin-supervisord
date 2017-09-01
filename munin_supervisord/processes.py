@@ -36,13 +36,13 @@ import psutil
 import supervisor.xmlrpc
 
 
-__author__ = "ratazzi"
-__copyright__ = "ratazzi <ratazzi.potts@gmail.com>"
-__credits__ = []
+__author__ = "gordol"
+__copyright__ = "Thomas Gordon Lowrey IV <linuxinit@gmail.com>"
+__credits__ = ["ratazzi <ratazzi.potts@gmail.com>"]
 __license__ = "MIT License"
-__version__ = "0.0.1"
-__maintainer__ = "ratazzi"
-__email__ = "ratazzi.potts@gmail.com"
+__version__ = "0.0.2"
+__maintainer__ = "gordol"
+__email__ = "linuxinit@gmail.com"
 __status__ = "Development"
 
 
