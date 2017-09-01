@@ -105,8 +105,9 @@ class MuninSupervisordProcessStatsPlugin(MuninPlugin):
                 p = psutil.Process(entry['pid'])
                 data = p.as_dict(attrs=attrs)
                 cpu_usages = []
+                #sample for ~2 seconds
                 for i in range(20):
-                    cpu_usages.append(p.cpu_percent(interval=0.05))
+                    cpu_usages.append(p.cpu_percent(interval=0.1))
 
                 data['cpu_percent_max'] = float(max(cpu_usages))
                 data['cpu_percent_avg'] = float(sum(cpu_usages))/len(cpu_usages)
