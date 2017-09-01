@@ -54,22 +54,16 @@ class MuninSupervisordProcessStatsPlugin(MuninPlugin):
     def __init__(self, argv=(), env=None, debug=False):
         MuninPlugin.__init__(self, argv, env, debug)
 
-        graphs = [('supervisord_processes_memory_usage', 'Memory usage',
-                   'Memory usage', 'Memory usage (MiB)', 'LINE2', 'GAUGE', None),
-                  ('supervisord_processes_cpu_percent_avg', 'Average CPU utilization as a percentage',
-                   'Average CPU utilization as a percentage', 'Avg CPU percentage', 'LINE2', 'GAUGE', None),
-                  ('supervisord_processes_cpu_percent_max', 'Max CPU utilization as a percentage',
-                   'Max CPU utilization as a percentage', 'Max CPU percentage', 'LINE2', 'GAUGE', None),
-                  ('supervisord_processes_num_context_switches_involuntary', 'Involuntary context switches',
-                   'Involuntary context switches', 'Voluntary context Switches', 'LINE2', 'GAUGE', None),
-                  ('supervisord_processes_num_context_switches_voluntary', 'Voluntary context switches',
-                   'Voluntary context switches', 'Voluntary context Switches', 'LINE2', 'GAUGE', None),
-                  ('supervisord_processes_num_fds', 'File descriptors used',
-                   'File descriptors used', None, 'LINE2', 'GAUGE', '--lower-limit 0'),
-                  ('supervisord_processes_num_threads', 'Threads currently used',
-                   'Threads currently used', None, 'LINE2', 'GAUGE', '--lower-limit 0'),
-                  ('supervisord_processes_num_connections', 'Socket connections opened',
-                   'Socket connections opened', None, 'LINE2', 'GAUGE', '--lower-limit 0')]
+        graphs = [
+            ('supervisord_processes_memory_usage', 'Memory usage', 'Memory usage', 'Memory usage (MiB)', 'LINE2', 'GAUGE', None),
+            ('supervisord_processes_cpu_percent_avg', 'CPU utilization as a percentage (avg)', 'CPU utilization as a percentage (avg)', 'Avg CPU percentage', 'LINE2', 'GAUGE', None),
+            ('supervisord_processes_cpu_percent_max', 'CPU utilization as a percentage (max)', 'CPU utilization as a percentage (max)', 'Max CPU percentage', 'LINE2', 'GAUGE', None),
+            ('supervisord_processes_num_context_switches_involuntary', 'Context switches (involuntary)', 'Context switches (involuntary)', 'Voluntary context Switches', 'LINE2', 'GAUGE', None),
+            ('supervisord_processes_num_context_switches_voluntary', 'Context switches (voluntary)', 'Context switches (voluntary)', 'Voluntary context Switches', 'LINE2', 'GAUGE', None),
+            ('supervisord_processes_num_fds', 'File descriptors used', 'File descriptors used', None, 'LINE2', 'GAUGE', '--lower-limit 0'),
+            ('supervisord_processes_num_threads', 'Threads currently used', 'Threads currently used', None, 'LINE2', 'GAUGE', '--lower-limit 0'),
+            ('supervisord_processes_num_connections', 'Socket connections opened', 'Socket connections opened', None, 'LINE2', 'GAUGE', '--lower-limit 0')
+        ]
 
         self._category = 'supervisord'
         transport = supervisor.xmlrpc.SupervisorTransport(None, None, serverurl=self.envGet('url'))
