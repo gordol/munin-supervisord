@@ -37,8 +37,8 @@ import supervisor.xmlrpc
 
 
 __author__ = "gordol"
-__copyright__ = "Thomas Gordon Lowrey IV <linuxinit@gmail.com>"
-__credits__ = ["ratazzi <ratazzi.potts@gmail.com>"]
+__copyright__ = "ratazzi <ratazzi.potts@gmail.com>"
+__credits__ = ["Thomas Gordon Lowrey IV <linuxinit@gmail.com>"]
 __license__ = "MIT License"
 __version__ = "0.0.2"
 __maintainer__ = "gordol"
